@@ -23,7 +23,7 @@ RUN dotnet publish -c Release -o /app --no-restore /p:PublishSingleFile=false
 # Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 LABEL org.opencontainers.image.source="https://example.com/your-repo" \
-      org.opencontainers.image.licenses="MIT"
+      org.opencontainers.image.licenses="Proprietary"
 WORKDIR /app
 ENV ASPNETCORE_URLS="http://+:80"
 ENV DOTNET_RUNNING_IN_CONTAINER=true

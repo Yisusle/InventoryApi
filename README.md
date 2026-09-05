@@ -276,4 +276,7 @@ Ver [DOCKER.md](./DOCKER.md) para instrucciones de Docker y Kubernetes.
 
 ## Licencia
 
-MIT
+Todos los derechos reservados. El código se publica únicamente con fines de
+portafolio y evaluación. No se permite copiar, modificar, redistribuir,
+publicar o utilizar comercialmente este proyecto sin autorización previa por
+escrito. Consulta [LICENSE](./LICENSE).
