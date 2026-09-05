@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using BCrypt.Net;
 using Inventory.Api.Constants;
 using Inventory.Api.Models.Auth;
@@ -14,6 +15,7 @@ namespace Inventory.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[EnableRateLimiting("auth")]
 public class AuthController : ControllerBase
 {
     private readonly IUserRepository _userRepo;
