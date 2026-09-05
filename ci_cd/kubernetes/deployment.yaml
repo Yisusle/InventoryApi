@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory-api
+  namespace: default
+  labels:
+    app: inventory-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: inventory-api
+  template:
+    metadata:
+      labels:
+        app: inventory-api
+    spec:
+      containers:
+      - name: inventory-api
+        image: inventory-api:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+          name: http
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Production"
+        - name: ConnectionStrings__DefaultConnection
+          valueFrom:
+            secretKeyRef:
+              name: inventory-secrets
+              key: connection-string
+        - name: Jwt__Secret
+          valueFrom:
+            secretKeyRef:
+              name: inventory-secrets
+              key: jwt-secret
+        - name: Jwt__Issuer
+          value: "inventory-api"
+        - name: Jwt__Audience
+          value: "inventory-api-users"
+        - name: Jwt__ExpirationMinutes
+          value: "30"
+        - name: Cors__AllowedOrigins__0
+          value: "__REPLACE_WITH_YOUR_FRONTEND_ORIGIN__"
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
