@@ -7,6 +7,8 @@ public enum InventoryMovementOutcome
     Success,
     ProductNotFound,
     SaleNotFound,
+    ProductNotInSale,
+    ReturnQuantityExceeded,
     InvalidOperation,
     Conflict
 }

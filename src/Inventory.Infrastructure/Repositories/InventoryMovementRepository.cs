@@ -22,7 +22,11 @@ public class InventoryMovementRepository : IInventoryMovementRepository
     public async Task<(IEnumerable<InventoryMovement> Items, int TotalCount)> ListPagedAsync(
         int page, int pageSize, CancellationToken cancellationToken = default)
     {
-        var query = _db.InventoryMovements.AsNoTracking().OrderByDescending(m => m.CreatedAt);
+        var query = _db.InventoryMovements
+            .AsNoTracking()
+            .Include(m => m.Product)
+            .Include(m => m.PerformedByUser)
+            .OrderByDescending(m => m.CreatedAt);
         return (await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken),
             await query.CountAsync(cancellationToken));
     }

@@ -42,10 +42,14 @@ public class InventoryMovementService : IInventoryMovementService
         if (sale is null)
             return new InventoryMovementResult(InventoryMovementOutcome.SaleNotFound);
 
-        var soldQuantity = sale.Lines.SingleOrDefault(line => line.ProductId == productId)?.Quantity ?? 0;
+        var soldLine = sale.Lines.SingleOrDefault(line => line.ProductId == productId);
+        if (soldLine is null)
+            return new InventoryMovementResult(InventoryMovementOutcome.ProductNotInSale);
+
+        var soldQuantity = soldLine.Quantity;
         var returnedQuantity = await _movementRepository.GetReturnedQuantityAsync(saleId, productId, cancellationToken);
-        if (soldQuantity == 0 || returnedQuantity + quantity > soldQuantity)
-            return new InventoryMovementResult(InventoryMovementOutcome.InvalidOperation);
+        if (returnedQuantity + quantity > soldQuantity)
+            return new InventoryMovementResult(InventoryMovementOutcome.ReturnQuantityExceeded);
 
         return await ApplyAsync(userId, productId, quantity, "CustomerReturn", reason, saleId, cancellationToken);
     }
